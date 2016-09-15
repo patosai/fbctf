@@ -250,6 +250,8 @@ import_empty_db "root" "$P_ROOT" "$DB" "$CTF_PATH" "$MODE"
 # Make attachments folder world writable
 sudo chmod 777 "$CTF_PATH/src/data/attachments"
 sudo chmod 777 "$CTF_PATH/src/data/attachments/deleted"
+# Make custom logos folder world writable
+sudo chmod 777 "$CTF_PATH/src/static/img/customlogo"
 
 # If provisioning is in prod, improve HHVM performance
 if [[ "$MODE" == "prod" ]]; then

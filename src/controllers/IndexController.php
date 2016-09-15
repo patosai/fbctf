@@ -321,25 +321,34 @@ class IndexController extends Controller {
                 <label for="">{tr('Password')}</label>
                 <input autocomplete="off" name="password" type="password" />
               </div>
-              {$token_field}
-            </fieldset>
-            <div class="fb-choose-emblem">
-              <h6>{tr('Choose an Emblem')}</h6>
-              <div class="emblem-carousel">{$logos_section}</div>
+            {$token_field}
+          </fieldset>
+          <div class="fb-choose-emblem">
+            <h6>Choose an Emblem</h6>
+            <h6>
+              <a href="#" id="custom-emblem-link">or upload your own</a>
+            </h6>
+            <div class="custom-emblem">
+              <input autocomplete="off" name="custom-emblem" id="custom-emblem-input" type="file" accept="image/*"/>
+              <img id="custom-emblem-preview" src=""></img>
             </div>
-            <div class="form-el--actions fb-container container--small">
-              <p>
-                <button
-                  id="register_button"
-                  class="fb-cta cta--yellow"
-                  type="button">
-                  {tr('Sign Up')}
-                </button>
-              </p>
+            <div class="emblem-carousel">
+              <div id="custom-emblem-carousel-notice">
+                <div class="center-wrapper">
+                  <h6>
+                    <a href="#" id="custom-emblem-clear-link">Clear your custom emblem to use a default emblem</a>
+                  </h6>
+                </div>
+              </div>
+              {$logos_section}
             </div>
-          </form>
-        </div>
-      </main>;
+          </div>
+          <div class="form-el--actions fb-container container--small">
+            <p><button id="register_button" class="fb-cta cta--yellow" type="button">Sign Up</button></p>
+          </div>
+        </form>
+      </div>
+    </main>;
   }
 
   public async function genRenderRegistrationNoNames(): Awaitable<:xhp> {
@@ -390,7 +399,23 @@ class IndexController extends Controller {
             </fieldset>
             <div class="fb-choose-emblem">
               <h6>{tr('Choose an Emblem')}</h6>
-              <div class="emblem-carousel">{$logos_section}</div>
+              <h6>
+                <a href="#" id="custom-emblem-link">or upload your own</a>
+              </h6>
+              <div class="custom-emblem">
+                <input autocomplete="off" name="custom-emblem" id="custom-emblem-input" type="file" accept="image/*"/>
+                <img id="custom-emblem-preview" src=""></img>
+              </div>
+              <div class="emblem-carousel">
+                <div id="custom-emblem-carousel-notice">
+                  <div class="center-wrapper">
+                    <h6>
+                      <a href="#" id="custom-emblem-clear-link">Clear your custom emblem to use a default emblem</a>
+                    </h6>
+                  </div>
+                </div>
+                {$logos_section}
+              </div>
             </div>
             <div class="form-el--actions fb-container container--small">
               <p>

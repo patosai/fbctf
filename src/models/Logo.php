@@ -6,6 +6,7 @@ class Logo extends Model implements Importable, Exportable {
     private int $used,
     private int $enabled,
     private int $protected,
+    private int $custom,
     private string $name,
     private string $logo,
   ) {}
@@ -32,6 +33,10 @@ class Logo extends Model implements Importable, Exportable {
 
   public function getProtected(): bool {
     return $this->protected === 1;
+  }
+
+  public function getCustom(): bool {
+    return $this->custom === 1;
   }
 
   // Check to see if the logo exists.
@@ -71,6 +76,22 @@ class Logo extends Model implements Importable, Exportable {
     return $result->mapRows()[0]['name'];
   }
 
+  // Logo model by name
+  public static async function genLogo(
+    string $name,
+  ): Awaitable<Logo> {
+    $db = await self::genDb();
+
+    $result = await $db->queryf(
+      'SELECT * FROM logos WHERE name = %s',
+      $name,
+    );
+
+    invariant($result->numRows() === 1, 'Expected exactly one result');
+
+    return self::logoFromRow($result->mapRows()[0]);
+  }
+
   // All the logos.
   public static async function genAllLogos(): Awaitable<array<Logo>> {
     $db = await self::genDb();
@@ -107,6 +128,7 @@ class Logo extends Model implements Importable, Exportable {
       intval(must_have_idx($row, 'used')),
       intval(must_have_idx($row, 'enabled')),
       intval(must_have_idx($row, 'protected')),
+      intval(must_have_idx($row, 'custom')),
       must_have_idx($row, 'name'),
       must_have_idx($row, 'logo'),
     );
@@ -175,10 +197,34 @@ class Logo extends Model implements Importable, Exportable {
     // Return newly created logo_id
     $result = await $db->queryf(
       'SELECT id FROM logos WHERE logo = %s LIMIT 1',
-      $name,
+      $logo,
     );
 
     invariant($result->numRows() === 1, 'Expected exactly one result');
     return intval($result->mapRows()[0]['id']);
+  }
+
+  // Create custom logo
+  public static async function genCreateCustom(
+    string $name,
+    string $image_path,
+  ): Awaitable<int> {
+    $db = await self::genDb();
+
+    $id = await Logo::genCreate(
+      false,
+      true,
+      false,
+      $name,
+      $image_path,
+    );
+
+    // Return newly created logo_id
+    await $db->queryf(
+      'UPDATE logos SET custom = 1 WHERE id = %d',
+      $id
+    );
+
+    return $id;
   }
 }
